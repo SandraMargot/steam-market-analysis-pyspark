@@ -8,8 +8,9 @@ Analysis of **Steam (a major PC gaming platform)** using **PySpark on Databricks
 
 This project explores the Steam game catalog to understand what drives game performance: genres, pricing, publishers, platforms, and player engagement.
 
-The dataset comes as a **nested JSON file stored in a data lake**, which cannot be analyzed directly.  
-The main work consists in transforming this raw structure into a clean dataset and structuring it for analysis.
+The dataset comes as a **nested JSON file stored in a data lake**.
+
+This type of structure is difficult to handle cleanly with Pandas. PySpark natively supports nested fields and arrays, which makes it well-suited for processing this dataset. Databricks provides a scalable environment to run these transformations efficiently.
 
 ---
 
@@ -65,7 +66,9 @@ The analytical dataset is structured using a **star schema**:
 - dimensions: genres, publishers, platforms, languages  
 - bridge tables for many-to-many relationships  
 
-![Star schema](Visuals/Steam_star_schema.png)
+<p align="center">
+  <img src="Visuals/steam-pipeline.png" width="700"/>
+</p>
 
 ---
 
@@ -79,7 +82,7 @@ The analytical dataset is structured using a **star schema**:
 
 ---
 
-## Visual Analysis
+## Some of the visual analysis
 
 ### Top publishers
 ![Top publishers](Visuals/top_publishers.png)
@@ -98,11 +101,11 @@ The analytical dataset is structured using a **star schema**:
 
 ---
 
-## Interactive Notebook
+## Interactive Notebook for full analysis
 
 👉 https://huggingface.co/spaces/smargot/Steam  
 
-*Note: Databricks outputs may display tables by default. Visualizations are available in the "Visualization" tabs.*
+*Note: Databricks outputs may display tables by default. Visualizations are available in the "Visualization 1" tabs.*
 
 ---
 
