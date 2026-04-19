@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment
+.env
+
+# OS / Windows
+Thumbs.db
+.DS_Store
+
+# Zone.Identifier metadata
+*:Zone.Identifier
