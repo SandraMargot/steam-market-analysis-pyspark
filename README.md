@@ -66,9 +66,7 @@ The analytical dataset is structured using a **star schema**:
 - dimensions: genres, publishers, platforms, languages  
 - bridge tables for many-to-many relationships  
 
-<p align="center">
-  <img src="Visuals/steam-pipeline.png" width="700"/>
-</p>
+![Data pipeline](Visuals/medallion_pipeline.png)
 
 ---
 
