@@ -1,65 +1,135 @@
-# Steam Marketplace Insights
-A data-driven overview of the global PC gaming ecosystem on Steam.
+# Steam Market Analysis (PySpark)
+
+Analysis of **Steam (a major PC gaming platform)** using **PySpark on Databricks**, focused on transforming semi-structured data and extracting market insights.
 
 ---
 
-## What it does
-- Analyzes the Steam catalogue to understand today’s gaming landscape  
-- Identifies key trends in publishers, genres, platforms, pricing, and ratings  
-- Highlights what drives game popularity and player engagement  
-- Provides actionable insights for strategic game development and positioning
+## Overview
+
+This project explores the Steam game catalog to understand what drives game performance: genres, pricing, publishers, platforms, and player engagement.
+
+The dataset comes as a **nested JSON file stored in a data lake**, which cannot be analyzed directly.  
+The main work consists in transforming this raw structure into a clean dataset and structuring it for analysis.
 
 ---
 
-## Data Used
-### Source
-Steam dataset (nested JSON) from S3  
-`steam_game_output.json`
+## Data Processing Approach
 
-### Core fields explored
-- Publisher & developer metadata  
-- Genres & categories  
-- Release dates  
-- Price & discount information  
-- Positive/negative review counts  
-- Supported platforms  
-- Languages and age ratings
+The project follows a **layered transformation approach inspired by medallion architecture**:
+
+- **Raw input (Bronze logic)**  
+  Nested JSON data ingested from S3  
+
+- **Transformation (Silver logic)**  
+  Data flattened and cleaned using PySpark  
+  - field normalization  
+  - explode() on nested arrays  
+  - date parsing  
+  - data quality fixes  
+
+- **Analytics layer (Gold logic)**  
+  Structured dataset for analysis  
+  - star schema logic  
+  - aggregations  
+  - visualizations  
+
+👉 This logic is implemented within a **single PySpark workflow**, rather than persisted Bronze/Silver/Gold tables.
+
+![Data pipeline](Visuals/steam-pipeline.png)
 
 ---
 
-## Analysis Focus
-### Market Overview
-- Most active publishers  
-- Highest-rated titles  
-- Release patterns over time (including the Covid period)  
-- Pricing and discount distribution  
+## What I did
 
-### Genres
-- Most represented genres  
-- Genres with the best review ratios  
-- Genre–publisher affinities  
-- High-value genres (based on pricing signals)
+- Explored a **deeply nested JSON schema**  
+- Transformed data using **PySpark**  
+- Built a **structured analytical dataset**  
+- Answered business questions using aggregations  
 
-### Platforms
-- Availability across Windows, Mac, and Linux  
-- Genre–platform preferences
+---
+
+## Data
+
+- Source: Steam dataset (`steam_game_output.json`)  
+- Format: nested JSON  
+- ~55k games with embedded fields (genres, platforms, languages…)  
+- Stored in an S3 data lake  
+
+---
+
+## Data Model
+
+The analytical dataset is structured using a **star schema**:
+
+- fact table: games  
+- dimensions: genres, publishers, platforms, languages  
+- bridge tables for many-to-many relationships  
+
+![Star schema](Visuals/Steam_star_schema.png)
+
+---
+
+## Key Insights
+
+- The market has grown significantly over time  
+- Publishers tend to specialize in specific genres  
+- Action, Adventure, Indie, and RPG dominate revenue potential  
+- English is present in most games  
+- Windows is the dominant platform  
+
+---
+
+## Visual Analysis
+
+### Top publishers
+![Top publishers](Visuals/top_publishers.png)
+
+### Releases over time
+![Releases over time](Visuals/releases_over_time.png)
+
+### Price distribution
+![Price distribution](Visuals/price_distribution.png)
+
+### Most represented genres
+![Genres](Visuals/top_genres.png)
+
+### Most profitable genres
+![Profitable genres](Visuals/profitable_genres.png)
+
+---
+
+## Interactive Notebook
+
+👉 https://huggingface.co/spaces/smargot/Steam  
+
+*Note: Databricks outputs may display tables by default. Visualizations are available in the "Visualization" tabs.*
 
 ---
 
 ## Tech Stack
-- Databricks (Free Edition)  
-- PySpark (handling nested and semi-structured JSON)  
-- Transformations using `explode()`, `getField()`, and date parsing  
-- Visualizations built with Databricks notebook dashboard (exported with outputs) as "publish" is not available
+
+- Databricks  
+- PySpark  
+- AWS S3  
 
 ---
 
-## 📁 Key Files
-- `Project_Steam_Sandra.ipynb` — Data preparation & EDA  
-- `Project_Steam_Sandra-visuals.ipynb` — All charts (exported with outputs)
+## Project Structure
+
+- `data_processing.ipynb` → data transformation  
+- `analysis.ipynb` → analysis & charts  
+- `Visuals/` → exported images  
 
 ---
 
-## Notes
-Databricks no longer supports public notebook publishing.  
-All visualizations are therefore included directly in the exported notebooks stored in this repository.
+## Next Steps
+
+Planned improvements to move toward a more production-ready setup:
+
+- Implement a **fully persisted medallion architecture**  
+  - Bronze: raw ingested data  
+  - Silver: cleaned and normalized tables  
+  - Gold: analytical / business-ready tables  
+
+- Separate transformations into distinct pipelines  
+- Store intermediate datasets instead of computing everything in one workflow  
